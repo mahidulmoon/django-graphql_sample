@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'django_graphiql',  # -> For GUI interface
     'graphene_django',  # -> For graphql api
 ]
+GRAPHENE = {
+    'SCHEMA': 'users.schema.schema',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
