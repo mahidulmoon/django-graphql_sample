@@ -80,6 +80,33 @@ class UpdateUser(graphene.Mutation):
 #################################### update user #################################
 
 
+#################################### get user #################################
+
+class QueryType(graphene.ObjectType):
+        """
+        This is what read query looks like:
+            query {
+                  user(id or username like-> username:"boopDog") {
+                    firstName
+                    lastName
+                    ... -> fetch fields
+                  }
+                }
+        """
+        user = graphene.Field(
+            UserType,
+            id=graphene.String(),
+            username=graphene.String()
+        )
+
+        @staticmethod
+        def resolve_user(*args, **kwargs):
+            return User.objects.filter(**kwargs).first()
+
+
+#################################### get user #################################
+
+
 class Mutation(graphene.ObjectType):
         """
         This class contains the fields of models that are supposed to be 
@@ -90,5 +117,6 @@ class Mutation(graphene.ObjectType):
 
 
 schema = graphene.Schema(
+    query=QueryType,
     mutation=Mutation  # Adding mutations to our schema
 )
