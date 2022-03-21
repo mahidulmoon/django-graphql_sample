@@ -107,6 +107,25 @@ class QueryType(graphene.ObjectType):
 #################################### get user #################################
 
 
+#################################### delete user #################################
+class DeleteUser(graphene.Mutation):
+        class Arguments:
+            id = graphene.ID()
+
+        user = graphene.Field(UserType)
+
+        @classmethod
+        def mutate(cls, root, info, id):
+            user = User.objects.get(id=id)
+            user.delete()
+            return DeleteUser(user)
+    
+    
+     
+
+#################################### delete user #################################
+
+
 class Mutation(graphene.ObjectType):
         """
         This class contains the fields of models that are supposed to be 
