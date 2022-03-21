@@ -1,13 +1,15 @@
 from graphene_django import DjangoObjectType
 import graphene
 from django.contrib.auth import get_user_model
-
+#################################### create user #################################
 User = get_user_model()
+
 
 class UserType(DjangoObjectType):
     class Meta:
         model = User
         fields = '__all__'
+
 
 class CreateUser(graphene.Mutation):
     """
@@ -31,16 +33,61 @@ class CreateUser(graphene.Mutation):
             email=user_data.get('email'),
         )
         user.set_password(user_data.password)  # This will hash the password
-        
+
         user.save()
         return CreateUser(user=user)
 
+
+# class Mutation(graphene.ObjectType):
+#     """
+#     This class contains the fields of models that are supposed to be
+#     mutated.
+#     """
+#     create_user = CreateUser.Field()
+
+# schema = graphene.Schema(
+#     mutation=Mutation  # Adding mutations to our schema
+# )
+
+
+#################################### create user #################################
+
+
+#################################### update user #################################
+class UpdateUser(graphene.Mutation):
+        class Arguments:
+            id = graphene.ID()
+            username = graphene.String()
+            email = graphene.String()
+            first_name = graphene.String()
+            last_name = graphene.String()
+
+        user = graphene.Field(UserType)
+
+        @classmethod
+        def mutate(cls, root, info, id, **update_data):
+            user = User.objects.filter(id=id)
+            if user:
+                params = update_data
+                user.update(**{k: v for k, v in params.items() if params[k]})
+                return UpdateUser(user=user.first())
+            else:
+                print('User with given ID does not exist.')
+
+
+
+
+#################################### update user #################################
+
+
 class Mutation(graphene.ObjectType):
-    """
-    This class contains the fields of models that are supposed to be 
-    mutated.
-    """
-    create_user = CreateUser.Field()
+        """
+        This class contains the fields of models that are supposed to be 
+        mutated.
+        """
+        create_user = CreateUser.Field()
+        update_user = UpdateUser.Field()
+
 
 schema = graphene.Schema(
     mutation=Mutation  # Adding mutations to our schema
