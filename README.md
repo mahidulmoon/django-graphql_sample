@@ -12,3 +12,21 @@ query{
     username
   }
 }
+
+
+
+create: 
+mutation{
+  createUser(
+    email: "new@gmail.com"
+    username: "newnew"
+    firstName: "new"
+    lastName: "new"
+    password: "1231234321"
+  ){
+    user{
+      email
+      username
+    }
+  }
+}
